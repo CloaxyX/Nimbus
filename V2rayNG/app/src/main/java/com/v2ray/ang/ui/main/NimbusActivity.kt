@@ -2,6 +2,8 @@ package com.v2ray.ang.ui.main
 
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
+import android.content.ComponentName
+import android.content.pm.PackageManager
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -23,6 +25,8 @@ import com.v2ray.ang.helper.MessageHelper
 import com.v2ray.ang.util.Utils
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.File
+import java.net.HttpURLConnection
 import java.net.URL
 import java.util.UUID
 import kotlin.concurrent.thread
@@ -67,6 +71,42 @@ class NimbusActivity : ComponentActivity() {
         runCatching { MessageHelper.sendMsg2Service(this, AppConfig.MSG_UNREGISTER_CLIENT, "") }
         runCatching { unregisterReceiver(receiver) }
         super.onDestroy()
+    }
+
+    private fun geoReady(): Boolean {
+        val d = Utils.userAssetPath(this)
+        return File(d, "geosite.dat").exists() && File(d, "geoip.dat").exists()
+    }
+
+    private fun downloadGeo(): Boolean {
+        val dir = Utils.userAssetPath(this)
+        for (src in listOf("Loyalsoldier/v2ray-rules-dat", "runetfreedom/russia-v2ray-rules-dat")) {
+            try {
+                for (f in listOf("geosite.dat", "geoip.dat")) {
+                    val target = File(dir, f)
+                    if (target.exists()) continue
+                    val tmp = File(dir, "$f.tmp")
+                    val c = URL("https://github.com/$src/releases/latest/download/$f").openConnection() as HttpURLConnection
+                    c.connectTimeout = 15000
+                    c.readTimeout = 30000
+                    c.instanceFollowRedirects = true
+                    c.inputStream.use { i -> tmp.outputStream().use { o -> i.copyTo(o) } }
+                    if (tmp.length() < 1000) {
+                        tmp.delete()
+                        error("bad file")
+                    }
+                    tmp.renameTo(target)
+                }
+                if (geoReady()) return true
+            } catch (e: Exception) {
+            }
+        }
+        return false
+    }
+
+    private fun startVpn() {
+        val i = if (SettingsManager.isVpnMode()) VpnService.prepare(this) else null
+        if (i == null) LauncherManager.startService(this) else vpnPermission.launch(i)
     }
 
     private fun js(code: String) {
@@ -163,8 +203,32 @@ class NimbusActivity : ComponentActivity() {
                     js("nbState('stopped')")
                     return@runOnUiThread
                 }
-                val i = if (SettingsManager.isVpnMode()) VpnService.prepare(this@NimbusActivity) else null
-                if (i == null) LauncherManager.startService(this@NimbusActivity) else vpnPermission.launch(i)
+                runCatching { SettingsManager.initAssets(this@NimbusActivity, assets) }
+                if (geoReady()) {
+                    startVpn()
+                } else {
+                    js("nbState('geo')")
+                    thread {
+                        val ok = downloadGeo()
+                        runOnUiThread {
+                            if (ok) startVpn()
+                            else js("nbState('error:Не удалось скачать базы geoip и geosite. Проверь интернет и попробуй снова.')")
+                        }
+                    }
+                }
+            }
+        }
+
+        @JavascriptInterface
+        fun setIcon(i: Int) {
+            runCatching {
+                val pm = this@NimbusActivity.packageManager
+                val pkg = this@NimbusActivity.packageName
+                fun cn(k: Int) = ComponentName(pkg, "com.v2ray.ang.ui.main.NimbusIcon$k")
+                pm.setComponentEnabledSetting(cn(i), PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP)
+                for (k in 0..5) if (k != i) {
+                    pm.setComponentEnabledSetting(cn(k), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP)
+                }
             }
         }
 
