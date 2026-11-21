@@ -85,12 +85,92 @@
             android:label="Nimbus"
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize"
-            android:theme="@style/AppThemeDayNight.NoActionBar">
+            android:theme="@style/AppThemeDayNight.NoActionBar" />
+
+        <activity-alias
+            android:name=".ui.main.NimbusIcon0"
+            android:enabled="true"
+            android:exported="true"
+            android:icon="@mipmap/nimbus_icon_0"
+            android:roundIcon="@mipmap/nimbus_icon_0"
+            android:label="Nimbus"
+            android:targetActivity=".ui.main.NimbusActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".ui.main.NimbusIcon1"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/nimbus_icon_1"
+            android:roundIcon="@mipmap/nimbus_icon_1"
+            android:label="Nimbus"
+            android:targetActivity=".ui.main.NimbusActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".ui.main.NimbusIcon2"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/nimbus_icon_2"
+            android:roundIcon="@mipmap/nimbus_icon_2"
+            android:label="Nimbus"
+            android:targetActivity=".ui.main.NimbusActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".ui.main.NimbusIcon3"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/nimbus_icon_3"
+            android:roundIcon="@mipmap/nimbus_icon_3"
+            android:label="Nimbus"
+            android:targetActivity=".ui.main.NimbusActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".ui.main.NimbusIcon4"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/nimbus_icon_4"
+            android:roundIcon="@mipmap/nimbus_icon_4"
+            android:label="Nimbus"
+            android:targetActivity=".ui.main.NimbusActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".ui.main.NimbusIcon5"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/nimbus_icon_5"
+            android:roundIcon="@mipmap/nimbus_icon_5"
+            android:label="Nimbus"
+            android:targetActivity=".ui.main.NimbusActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
         <activity
             android:name=".ui.server.ServerVmessActivity"
             android:exported="false"
