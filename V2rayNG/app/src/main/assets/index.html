@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101418">
+<title>Nimbus</title>
+<style>
+:root{color-scheme:light dark;--em:cubic-bezier(.2,0,0,1);--emd:cubic-bezier(.05,.7,.1,1);--sa:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--t);font:400 16px/1.5 Roboto,"Google Sans",system-ui,sans-serif;min-height:100vh;transition:background .3s}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+button:focus-visible,textarea:focus-visible,input:focus-visible,.it:focus-visible{outline:2px solid var(--p);outline-offset:2px}
+svg{width:24px;height:24px;fill:currentColor;flex:none}
+.rp{position:relative;overflow:hidden}
+.rp::before{content:"";position:absolute;inset:0;background:currentColor;opacity:0;transition:opacity .2s;pointer-events:none}
+.rp:hover::before{opacity:.08}.rp:active::before{opacity:.12}
+.ripple{position:absolute;border-radius:50%;background:currentColor;opacity:.16;transform:scale(0);animation:rip .6s var(--em) forwards;pointer-events:none}
+@keyframes rip{to{transform:scale(1);opacity:0}}
+.bar{position:sticky;top:0;z-index:4;display:flex;align-items:center;justify-content:space-between;padding:calc(8px + env(safe-area-inset-top,0px)) 8px 8px 20px;max-width:480px;margin:auto;transition:background .25s}
+.bar.sc{background:var(--c2)}
+.bar h1{font-size:22px;font-weight:400}
+.ib{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:var(--tv)}
+.ib svg{width:22px;height:22px}
+main{max-width:480px;margin:auto;padding:0 16px 120px}
+.hero{border-radius:28px;background:var(--c1);padding:44px 16px 28px;text-align:center;overflow:hidden;transition:background .5s var(--em),color .5s;margin-bottom:16px}
+.hero.on{background:var(--pc);color:var(--opc)}
+.stage{position:relative;width:148px;height:148px;margin:0 auto 32px;display:grid;place-items:center}
+.ring{position:absolute;inset:0;clip-path:var(--sh-sunny);background:var(--p);opacity:0}
+.on .ring{animation:pulse 3.2s var(--em) infinite}.on .ring:nth-child(2){animation-delay:1.07s}.on .ring:nth-child(3){animation-delay:2.13s}
+@keyframes pulse{from{transform:scale(1);opacity:.3}to{transform:scale(2);opacity:0}}
+.pw{position:relative;width:148px;height:148px;color:var(--p);display:grid;place-items:center;transition:color .5s,transform .3s var(--em)}
+.sh{position:absolute;inset:0;background:var(--c3);clip-path:var(--sh-cookie);transition:clip-path .8s var(--em),background .5s var(--em)}
+.pw svg{position:relative;z-index:1;width:64px;height:64px;transition:transform .6s var(--em)}
+.pw:active{transform:scale(.94)}
+.on .pw{color:var(--op)}
+.on .pw .sh{background:var(--p);clip-path:var(--sh-sunny)}
+.busy .pw .sh{clip-path:var(--sh-clover)}
+.on .pw svg{transform:rotate(180deg)}
+.busy .pw svg{animation:bp 1s ease-in-out infinite}
+@keyframes bp{50%{transform:scale(.82)}}
+.pw.shake{animation:shake .45s}
+@keyframes shake{20%,60%{transform:translateX(-9px)}40%,80%{transform:translateX(9px)}}
+.st{font-size:28px;line-height:36px}
+.sub{font-size:14px;color:var(--tv);margin-top:4px;min-height:21px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 8px;transition:color .5s}
+.on .sub{color:var(--opc);opacity:.8}
+.swap{animation:swap .4s var(--emd)}
+@keyframes swap{from{opacity:0;transform:translateY(10px)}}
+.tabs{position:relative;display:flex;height:48px;border-bottom:1px solid var(--olv);margin-bottom:16px}
+.tabs button{flex:1;font-size:14px;font-weight:500;color:var(--tv);transition:color .3s;border-radius:12px 12px 0 0}
+.tabs button.cur{color:var(--p)}
+.ind{position:absolute;bottom:-1px;left:0;width:50%;display:flex;justify-content:center;transition:transform .4s var(--em);pointer-events:none}
+.ind i{width:48px;height:3px;background:var(--p);border-radius:3px 3px 0 0}
+.q{display:flex;align-items:center;gap:12px;height:52px;padding:0 16px;border-radius:26px;background:var(--c2);color:var(--tv);margin-bottom:12px;box-shadow:inset 0 0 0 0 var(--p);transition:box-shadow .25s}
+.q:focus-within{box-shadow:inset 0 0 0 2px var(--p)}
+.q input{flex:1;border:0;background:none;color:var(--t);font:inherit;outline:0;min-width:0}
+.w{display:grid;grid-template-rows:1fr;margin-bottom:8px;transition:grid-template-rows .35s var(--em),opacity .25s,margin .35s var(--em)}
+.w.out{grid-template-rows:0fr;opacity:0;margin-bottom:0}
+.clip{min-height:0;overflow:hidden;border-radius:16px}
+.anim .w{animation:enter .5s var(--emd) backwards;animation-delay:calc(var(--i)*45ms)}
+@keyframes enter{from{opacity:0;transform:translateY(18px) scale(.97)}}
+.it{display:flex;align-items:center;gap:12px;padding:10px 4px 10px 12px;border-radius:16px;background:var(--c1);cursor:pointer;transition:background .35s var(--em),color .35s}
+.it.sel{background:var(--sc);color:var(--osc)}
+.av{width:44px;height:44px;clip-path:var(--shp,var(--sh-cookie));display:grid;place-items:center;background:var(--pc);color:var(--opc);font-size:13px;font-weight:600;flex:none;transition:background .35s,color .35s,clip-path .6s var(--em)}
+.sel .av{background:var(--p);color:var(--op);clip-path:var(--sh-circle)}
+.b{flex:1;min-width:0}
+.n{font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.h{font-size:13px;color:var(--tv);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sel .h{color:var(--osc);opacity:.75}
+.ib.x{color:var(--er)}
+.empty{text-align:center;color:var(--tv);padding:36px 24px}
+.empty .bl{width:88px;height:88px;clip-path:var(--sh-cookie);background:var(--pc);color:var(--opc);display:grid;place-items:center;margin:0 auto 16px;animation:bob 3.4s ease-in-out infinite}
+.empty svg{width:40px;height:40px}
+@keyframes bob{50%{transform:translateY(-8px) rotate(4deg)}}
+.fab{position:fixed;right:max(16px,calc(50% - 224px));bottom:calc(16px + var(--sa));z-index:5;height:56px;min-width:56px;padding:0 16px;border-radius:16px;background:var(--pc);color:var(--opc);display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(0,0,0,.3);transition:transform .4s var(--em)}
+.fab span{max-width:110px;overflow:hidden;white-space:nowrap;padding-left:12px;font-weight:500;transition:max-width .35s var(--em),padding .35s var(--em),opacity .2s}
+.fab.small span{max-width:0;padding:0;opacity:0}
+body.sn .fab{transform:translateY(-70px)}
+.scrim{position:fixed;inset:0;z-index:10;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:opacity .3s}
+.scrim.open{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:11;max-width:480px;margin:auto;background:var(--c1);border-radius:28px 28px 0 0;padding:12px 24px calc(24px + var(--sa));transform:translateY(105%);transition:transform .5s var(--emd)}
+.sheet.open{transform:none}
+.grab{width:32px;height:4px;border-radius:2px;background:var(--ol);opacity:.5;margin:0 auto 16px}
+.sheet h2,.dlg h2{font-size:24px;font-weight:400;line-height:32px}
+.sheet p,.dlg p{font-size:14px;color:var(--tv);margin-top:8px}
+textarea{width:100%;height:132px;resize:none;margin:16px 0;padding:12px 16px;border-radius:12px;border:1px solid var(--ol);background:none;color:var(--t);font:14px/1.4 monospace;transition:border-color .2s,box-shadow .2s}
+textarea:focus{outline:0;border-color:var(--p);box-shadow:0 0 0 1px var(--p)}
+.acts{display:flex;justify-content:flex-end;gap:8px}
+.btn{height:40px;padding:0 24px;border-radius:20px;font-size:14px;font-weight:500;color:var(--p)}
+.btn.f{background:var(--p);color:var(--op)}
+.dlg{position:fixed;inset:0;margin:auto;z-index:11;width:min(312px,calc(100% - 48px));height:fit-content;background:var(--c3);border-radius:28px;padding:24px;opacity:0;transform:scale(.8);pointer-events:none;transition:opacity .25s,transform .4s var(--emd)}
+.dlg.open{opacity:1;transform:none;pointer-events:auto}
+.sws{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;justify-items:center;margin:24px 0 16px}
+.sw{width:60px;height:60px;clip-path:var(--shp);display:grid;place-items:center;color:#fff;transition:clip-path .5s var(--em),transform .3s var(--em)}
+.sw svg{transform:scale(0);transition:transform .35s var(--emd)}
+.sw.cur{clip-path:var(--sh-circle)}.sw.cur svg{transform:scale(1)}
+.sw:active{transform:scale(.9)}
+.snack{position:fixed;left:16px;right:16px;max-width:448px;margin:auto;bottom:calc(16px + var(--sa));z-index:30;background:var(--inv);color:var(--oinv);padding:14px 16px;border-radius:4px;font-size:14px;transform:translateY(160%);transition:transform .4s var(--emd)}
+.snack.show{transform:none}
+.onb{position:fixed;inset:0;z-index:40;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:24px;overflow:auto;transition:opacity .5s,transform .6s var(--em)}
+.onb.hide{opacity:0;transform:scale(1.06);pointer-events:none}
+.ob{width:100%;max-width:360px;text-align:center}
+.pv{position:relative;width:132px;height:132px;margin:0 auto 28px;animation:pop .8s var(--emd) backwards}
+.pv .sh{background:var(--p)}
+.ob h2{font-size:28px;font-weight:400;line-height:36px;animation:swap .6s var(--emd) .1s backwards}
+.ob p{font-size:14px;color:var(--tv);margin-top:8px;animation:swap .6s var(--emd) .2s backwards}
+.onb .sw{animation:pop .7s var(--emd) backwards;animation-delay:calc(.25s + var(--i)*70ms)}
+@keyframes pop{from{transform:scale(0) rotate(-60deg);opacity:0}}
+.btn.big{height:48px;width:100%;border-radius:24px;font-size:16px;animation:swap .6s var(--emd) .7s backwards}
+@media (prefers-reduced-motion:reduce){*,*::before{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style></head>
+<body>
+<header class="bar" id="bar"><h1>Nimbus</h1><button class="ib rp" id="pal" data-i="palette" aria-label="Цвет оформления"></button></header>
+<main>
+ <section class="hero" id="hero">
+  <div class="stage" id="stage"><i class="ring"></i><i class="ring"></i><i class="ring"></i>
+   <button class="pw" id="pw" data-i="power" aria-label="Подключить или отключить"><i class="sh" id="hsh"></i></button></div>
+  <div class="st" id="st"></div><div class="sub" id="sub"></div>
+ </section>
+ <div class="tabs"><button class="rp cur" id="t1">Серверы</button><button class="rp" id="t2">Подписки</button><div class="ind" id="ind"><i></i></div></div>
+ <label class="q" id="qw"><span data-i="search"></span><input id="q" type="search" placeholder="Поиск сервера"></label>
+ <div id="list"></div>
+</main>
+<button class="fab rp" id="fab" aria-label="Добавить"><b data-i="add" style="display:flex"></b><span>Добавить</span></button>
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet"><div class="grab"></div>
+ <h2>Добавить серверы</h2>
+ <p>Вставь ссылки vless://, vmess://, trojan://, ss://, hy2://, ссылку на подписку или её содержимое.</p>
+ <textarea id="in" spellcheck="false" placeholder="vless://…"></textarea>
+ <div class="acts"><button class="btn rp" id="cancel">Отмена</button><button class="btn f rp" id="ok">Добавить</button></div></div>
+<div class="dlg" id="dlg"><h2>Цвет оформления</h2><p>Палитра строится из выбранного цвета, как в Material You. Светлая и тёмная тема включаются по системе.</p>
+ <div class="sws" id="sws"></div><div class="acts"><button class="btn rp" id="done">Готово</button></div></div>
+<div class="onb" id="onb"><div class="ob">
+ <div class="pv"><i class="sh" id="pv"></i></div>
+ <h2>Добро пожаловать в Nimbus</h2><p style="font-size:16px;color:var(--t);margin-top:12px">Выбери свой цвет</p><p>Всё приложение подстроится под него. Позже цвет можно поменять кнопкой палитры.</p>
+ <div class="sws" id="sws2"></div>
+ <button class="btn f big rp" id="go">Продолжить</button></div></div>
+<div class="snack" id="snack" role="status"></div>
+<script>
+const $=s=>document.querySelector(s);
+const uid=()=>Math.random().toString(36).slice(2,9);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const IC={add:'M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z',del:'M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z',copy:'M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z',refresh:'M17.65 6.35A7.96 7.96 0 0 0 12 4a8 8 0 1 0 7.73 10h-2.08A6 6 0 1 1 12 6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z',palette:'M12 3a9 9 0 0 0 0 18c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z',power:'M13 3h-2v10h2V3zm4.83 2.17-1.42 1.42A6.92 6.92 0 0 1 19 12c0 3.87-3.13 7-7 7A6.995 6.995 0 0 1 7.58 6.58L6.17 5.17A8.932 8.932 0 0 0 3 12a9 9 0 0 0 18 0c0-2.74-1.23-5.18-3.17-6.83z',dns:'M20 13H4c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1h16c.55 0 1-.45 1-1v-6c0-.55-.45-1-1-1zM7 19c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM20 3H4c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1h16c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1zM7 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z',check:'M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z',search:'M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'};
+const ic=k=>`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${IC[k]}"/></svg>`;
+const AB={vless:'VL',vmess:'VM',trojan:'TJ',ss:'SS',hy2:'H2',tuic:'TU'},HUES=[215,265,330,20,95,165],SHS=['flower','clover','sunny','pent','soft','cookie'],AVS={vless:'cookie',vmess:'flower',trojan:'clover',ss:'sunny',hy2:'pent',tuic:'soft'},
+SH={cookie:[8,.055],flower:[6,.12],clover:[4,.2],sunny:[12,.07],pent:[5,.1],soft:[4,.07],circle:[1,0]};
+function shapes(){const N=96,st=document.documentElement.style;for(const k in SH){const[n,a]=SH[k],p=[];for(let i=0;i<N;i++){const t=i/N*Math.PI*2,R=(1+a*Math.cos(n*t))/(1+a);p.push((50+50*R*Math.cos(t)).toFixed(2)+'% '+(50+50*R*Math.sin(t)).toFixed(2)+'%')}st.setProperty('--sh-'+k,'polygon('+p.join(',')+')')}}
+let S={servers:[],subs:[],active:null,hue:215,onb:false},tab=1,on=false,busy=false;
+const NB=!!window.AndroidVpn;
+try{Object.assign(S,JSON.parse(localStorage.getItem('vpn')||'{}'))}catch(e){}
+const save=()=>{try{localStorage.setItem('vpn',JSON.stringify(S))}catch(e){}};
+const active=()=>S.servers.find(x=>x.id===S.active);
+function theme(){
+ const h=S.hue,d=matchMedia('(prefers-color-scheme:dark)').matches,c=(s,l)=>`hsl(${h} ${s}% ${l}%)`;
+ const v=d?{p:c(78,78),op:c(60,17),pc:c(40,30),opc:c(85,90),sc:c(20,29),osc:c(30,90),bg:c(16,9),c1:c(15,13),c2:c(14,17),c3:c(13,21),t:c(15,91),tv:c(12,76),ol:c(8,56),olv:c(12,30),er:'#f2b8b5',inv:c(15,90),oinv:c(15,15)}
+ :{p:c(60,38),op:'#fff',pc:c(95,89),opc:c(80,12),sc:c(35,88),osc:c(30,15),bg:c(30,98),c1:c(25,94),c2:c(22,91),c3:c(20,88),t:c(12,10),tv:c(10,30),ol:c(6,46),olv:c(14,80),er:'#b3261e',inv:c(12,20),oinv:c(20,95)};
+ for(const k in v)document.documentElement.style.setProperty('--'+k,v[k]);
+ $('meta[name=theme-color]').content=v.bg}
+matchMedia('(prefers-color-scheme:dark)').addEventListener('change',theme);
+let st;function snack(m){const e=$('#snack');e.textContent=m;e.classList.add('show');document.body.classList.add('sn');clearTimeout(st);st=setTimeout(()=>{e.classList.remove('show');document.body.classList.remove('sn')},4200)}
+function b64(s){s=s.trim().replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';const r=atob(s);try{return decodeURIComponent(escape(r))}catch(e){return r}}
+function parse(l){
+ l=l.trim();const m=l.match(/^([a-z0-9]+):\/\//i);if(!m)return null;const p=m[1].toLowerCase();
+ try{
+  if(p==='vmess'){const j=JSON.parse(b64(l.slice(8)));return{proto:'vmess',name:j.ps||j.add,host:j.add,port:+j.port,raw:l}}
+  if(p==='ss'){let r=l.slice(5),name='';const h=r.indexOf('#');if(h>-1){name=decodeURIComponent(r.slice(h+1));r=r.slice(0,h)}
+   r=r.split('?')[0];const hp=(r.includes('@')?r:b64(r)).split('@').pop(),i=hp.lastIndexOf(':');
+   return{proto:'ss',name:name||hp,host:hp.slice(0,i),port:+hp.slice(i+1),raw:l}}
+  if(['vless','trojan','hysteria2','hy2','tuic'].includes(p)){const u=new URL(l);
+   return{proto:p==='hysteria2'?'hy2':p,name:decodeURIComponent(u.hash.slice(1))||u.hostname,host:u.hostname,port:+u.port||443,raw:l}}
+ }catch(e){}
+ return null}
+function ingest(text,subId){
+ text=text.trim();let body=text;
+ if(!text.includes('://')){try{body=b64(text)}catch(e){body=''}}
+ const have=new Set(S.servers.map(s=>s.raw));let n=0;
+ body.split(/\s+/).map(parse).filter(Boolean).forEach(s=>{if(have.has(s.raw))return;have.add(s.raw);S.servers.push({...s,id:uid(),sub:subId});n++});
+ return n}
+async function load(url){const r=await fetch(url);if(!r.ok)throw new Error(r.status);return r.text()}
+const CORS='Не удалось загрузить подписку (в браузере это блокирует CORS, в APK обычно работает). Вставь её содержимое вручную.';
+async function addFlow(){
+ const v=$('#in').value.trim();if(!v)return;let n=0;
+ if(NB){n=+(await nbCall(/^https?:\/\/\S+$/i.test(v)?'addSub':'addText',v));nbLoad()}
+ else if(/^https?:\/\/\S+$/i.test(v)){
+  try{const t=await load(v),sub={id:uid(),name:new URL(v).hostname,url:v};S.subs.push(sub);n=ingest(t,sub.id)}
+  catch(e){return snack(CORS)}
+ }else n=ingest(v,'manual');
+ save();$('#in').value='';closeAll();
+ snack(n?`Добавлено серверов: ${n}`:'Серверы не найдены. Проверь формат ссылок.');render(true)}
+async function refresh(id){
+ if(NB){const n=await nbCall('refreshSub',id);nbLoad();snack('Обновлено: '+n);render(false);hero();return}
+ const s=S.subs.find(x=>x.id===id);if(!s||!s.url)return;
+ try{const t=await load(s.url);S.servers=S.servers.filter(x=>x.sub!==id);const n=ingest(t,id);
+  if(!active())S.active=null;save();snack(`Обновлено: ${n}`);render(false);hero()}
+ catch(e){snack(CORS)}}
+function remove(id,fn){
+ const w=document.querySelector(`.w[data-id="${id}"]`);if(w)w.classList.add('out');
+ setTimeout(()=>{fn();if(NB)AndroidVpn.removeAny(id);if(!active()){S.active=null;on=false}save();render(false);hero()},320)}
+async function copy(id){if(NB)return snack('В приложении копирование ссылки пока недоступно');const s=S.servers.find(x=>x.id===id);try{await navigator.clipboard.writeText(s.raw);snack('Ссылка скопирована')}catch(e){snack('Не удалось скопировать')}}
+function setT(sel,t){const e=$(sel);if(e.textContent===t)return;e.textContent=t;e.classList.remove('swap');void e.offsetWidth;e.classList.add('swap')}
+function hero(){const s=active();$('#hero').classList.toggle('on',on);$('#stage').classList.toggle('on',on);$('#stage').classList.toggle('busy',busy);
+ setT('#st',busy?'Подключение…':on?'Подключено':'Отключено');setT('#sub',s?s.name:'Сервер не выбран')}
+function fail(m){snack(m);const p=$('#pw');p.classList.remove('shake');void p.offsetWidth;p.classList.add('shake')}
+async function toggle(){
+ if(busy)return;const s=active();
+ if(!s)return fail('Сначала выбери сервер');
+ if(NB){busy=true;hero();if(on)AndroidVpn.disconnect();else AndroidVpn.connect();return}
+ const b=window.VpnBridge;
+ if(!b)return fail('Нативное VPN-ядро не подключено: страница управляет только списком конфигов.');
+ busy=true;hero();
+ try{if(on){await b.disconnect();on=false}else{await b.connect({link:s.raw,proto:s.proto,host:s.host,port:s.port});on=true}}
+ catch(e){snack('Ошибка: '+(e.message||e))}
+ busy=false;hero()}
+function render(anim){
+ $('#ind').style.transform=`translateX(${(tab-1)*100}%)`;
+ $('#t1').classList.toggle('cur',tab===1);$('#t2').classList.toggle('cur',tab===2);
+ $('#qw').style.display=tab===1?'':'none';
+ const L=$('#list');L.classList.toggle('anim',!!anim);let h='';
+ if(tab===1){
+  const q=$('#q').value.toLowerCase(),A=S.servers.filter(x=>(x.name+x.host).toLowerCase().includes(q));
+  h=A.length?A.map((x,i)=>`<div class="w" data-id="${x.id}" style="--i:${Math.min(i,8)}"><div class="clip"><div class="it rp${x.id===S.active?' sel':''}" data-pick="${x.id}" tabindex="0" role="button"><div class="av" style="--shp:var(--sh-${AVS[x.proto]||'cookie'})">${AB[x.proto]||'··'}</div><div class="b"><div class="n">${esc(x.name)}</div><div class="h">${esc(x.host)}:${x.port}</div></div><button class="ib rp" data-copy="${x.id}" aria-label="Копировать ссылку">${ic('copy')}</button><button class="ib x rp" data-del="${x.id}" aria-label="Удалить">${ic('del')}</button></div></div></div>`).join('')
+   :`<div class="empty"><div class="bl">${ic('dns')}</div>${S.servers.length?'Ничего не найдено':'Серверов пока нет. Нажми «Добавить» и вставь ссылки или подписку.'}</div>`;
+ }else{
+  h=S.subs.length?S.subs.map((x,i)=>`<div class="w" data-id="${x.id}" style="--i:${Math.min(i,8)}"><div class="clip"><div class="it"><div class="av" style="--shp:var(--sh-clover)">${ic('dns')}</div><div class="b"><div class="n">${esc(x.name)}</div><div class="h">Серверов: ${S.servers.filter(s=>s.sub===x.id).length}</div></div><button class="ib rp" data-ref="${x.id}" aria-label="Обновить">${ic('refresh')}</button><button class="ib x rp" data-dsub="${x.id}" aria-label="Удалить">${ic('del')}</button></div></div></div>`).join('')
+   :`<div class="empty"><div class="bl">${ic('refresh')}</div>Подписок нет. Добавь ссылку вида https://…, и она появится здесь.</div>`;
+ }
+ L.innerHTML=h}
+$('#list').addEventListener('click',e=>{
+ const g=k=>e.target.closest(`[data-${k}]`);let t;
+ if(t=g('copy'))return copy(t.dataset.copy);
+ if(t=g('del')){const id=t.dataset.del;return remove(id,()=>{S.servers=S.servers.filter(s=>s.id!==id)})}
+ if(t=g('ref'))return refresh(t.dataset.ref);
+ if(t=g('dsub')){const id=t.dataset.dsub;return remove(id,()=>{S.subs=S.subs.filter(s=>s.id!==id);S.servers=S.servers.filter(s=>s.sub!==id)})}
+ if(t=g('pick')){if(on||busy)return snack('Сначала отключись');S.active=t.dataset.pick;save();if(NB)AndroidVpn.select(S.active);
+  document.querySelectorAll('.it[data-pick]').forEach(el=>el.classList.toggle('sel',el===t));hero()}});
+$('#list').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.dataset.pick){e.preventDefault();e.target.click()}});
+document.addEventListener('pointerdown',e=>{
+ const t=e.target.closest('.rp');if(!t)return;const r=t.getBoundingClientRect(),d=Math.max(r.width,r.height)*2.2,s=document.createElement('span');
+ s.className='ripple';s.style.cssText=`width:${d}px;height:${d}px;left:${e.clientX-r.left-d/2}px;top:${e.clientY-r.top-d/2}px`;
+ t.appendChild(s);s.addEventListener('animationend',()=>s.remove())});
+function closeAll(){['scrim','sheet','dlg'].forEach(i=>$('#'+i).classList.remove('open'))}
+$('#fab').onclick=()=>{$('#scrim').classList.add('open');$('#sheet').classList.add('open');setTimeout(()=>$('#in').focus(),400)};
+$('#pal').onclick=()=>{$('#scrim').classList.add('open');$('#dlg').classList.add('open')};
+$('#scrim').onclick=$('#cancel').onclick=$('#done').onclick=closeAll;
+$('#ok').onclick=addFlow;$('#pw').onclick=toggle;
+$('#t1').onclick=()=>{if(tab!==1){tab=1;render(true)}};
+$('#t2').onclick=()=>{if(tab!==2){tab=2;render(true)}};
+$('#q').oninput=()=>render(false);
+const SWS=HUES.map((h,i)=>`<button class="sw rp" data-h="${h}" data-s="${SHS[i]}" style="--i:${i};--shp:var(--sh-${SHS[i]});background:hsl(${h} 60% 45%)" aria-label="Цвет ${h}">${ic('check')}</button>`).join('');
+$('#sws').innerHTML=SWS;$('#sws2').innerHTML=SWS;
+function marks(){document.querySelectorAll('.sw').forEach(b=>b.classList.toggle('cur',+b.dataset.h===S.hue))}
+document.addEventListener('click',e=>{const b=e.target.closest('.sw');if(!b)return;S.hue=+b.dataset.h;save();theme();marks();const v=$('#pv');if(v)v.style.clipPath=`var(--sh-${b.dataset.s})`});
+let ly=0;addEventListener('scroll',()=>{const y=scrollY;$('#bar').classList.toggle('sc',y>8);
+ if(Math.abs(y-ly)>6){$('#fab').classList.toggle('small',y>ly&&y>80);ly=y}},{passive:true});
+document.querySelectorAll('[data-i]').forEach(e=>e.insertAdjacentHTML('afterbegin',ic(e.dataset.i)));
+function nbLoad(){if(!NB)return;try{S.servers=JSON.parse(AndroidVpn.list());S.subs=JSON.parse(AndroidVpn.subs());S.active=AndroidVpn.selected()||null}catch(e){}}
+const cbs={};window.nbDone=(id,v)=>{const f=cbs[id];delete cbs[id];f&&f(v)};
+function nbCall(fn,arg){return new Promise(res=>{const id=uid();cbs[id]=res;AndroidVpn[fn](arg,id)})}
+window.nbState=st=>{busy=false;if(st==='running')on=true;else{on=false;if(st.startsWith('error:'))snack(st.slice(6)||'Ошибка запуска')}hero()};
+nbLoad();
+shapes();theme();marks();hero();render(true);
+if(S.onb)$('#onb').remove();else $('#go').onclick=()=>{S.onb=true;save();const o=$('#onb');o.classList.add('hide');setTimeout(()=>o.remove(),700)};
+const hsh=$('#hsh'),pv=$('#pv');let ang=0,spd=6,pa=0,lt=performance.now();
+function loop(t){const dt=Math.min(.05,(t-lt)/1000);lt=t;spd+=((busy?240:on?20:6)-spd)*Math.min(1,dt*3);ang=(ang+spd*dt)%360;hsh.style.transform=`rotate(${ang}deg)`;
+ if(pv&&pv.isConnected){pa=(pa+12*dt)%360;pv.style.transform=`rotate(${pa}deg)`}requestAnimationFrame(loop)}
+if(!matchMedia('(prefers-reduced-motion:reduce)').matches)requestAnimationFrame(loop);
+</script></body></html>
